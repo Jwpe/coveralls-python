@@ -50,6 +50,12 @@ class Coveralls(object):
             is_travis = True
             self.config['service_name'] = file_config.get('service_name', None) or 'travis-ci'
             self.config['service_job_id'] = os.environ.get('TRAVIS_JOB_ID')
+        elif os.environ.get('CIRCLECI'):
+            self.config['service_name'] = file_config.get('service_name') or 'circle-ci'
+            self.config['service_job_id'] = os.environ.get('CIRCLE_BUILD_NUM')
+            pull_request = os.environ.get('CI_PR_NUMBER')
+            if pull_request:
+                self.config['service_pull_request'] = pull_request
         else:
             is_travis = False
             self.config['service_name'] = file_config.get('service_name') or self.default_client
